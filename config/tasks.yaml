@@ -1,20 +1,18 @@
 research_task:
   description: >
-    Pesquise profundamente sobre {ferramentas_alvo} usando a ferramenta de busca.
-    1. Detalhe o impacto do contexto atual ({contexto}) na adoção corporativa.
-    2. Compare a arquitetura das soluções em {ferramentas_alvo}.
-    3. Avalie o atendimento a requisitos técnicos como {requisito_tecnico}.
+    Você recebeu uma lista de tecnologias: {ferramentas_alvo}.
+    Sua missão é realizar uma varredura técnica completa para CADA uma delas.
     
-    REGRA CRÍTICA DE EXECUÇÃO: 
-    - Proibido qualquer texto de introdução, saudação ou conclusão. 
-    - Ignore frases como "Aqui está o que encontrei", "It looks like" ou "Como posso ajudar". 
-    - Seu output DEVE começar obrigatoriamente com o título "## Relatório de Pesquisa Técnica".
-    - Trate o retorno da ferramenta de busca como dados brutos para extração, não como uma conversa.
-    - Vá direto para os fatos, métricas e links.
+    PROTOCOLO DE EXECUÇÃO:
+    1. Identifique individualmente cada tecnologia em {ferramentas_alvo}.
+    2. Execute ao menos uma busca específica para cada tecnologia separadamente.
+    3. Para cada ferramenta, extraia: Licença, Arquitetura base, e paridade S3.
+    4. Se os resultados de uma busca focarem apenas em uma ferramenta, você DEVE realizar uma nova busca focada na ferramenta restante.
+    
+    REGRA CRÍTICA: Não encerre a tarefa até ter dados factuais sobre todos os itens de {ferramentas_alvo}.
+    Proibido saudações. Comece com "## Relatório de Pesquisa Técnica".
   expected_output: >
-    Um relatório técnico puramente em Markdown (H2 e Bullet Points). 
-    Iniciado obrigatoriamente por "## Relatório de Pesquisa Técnica".
-    Sem metalinguagem ou comentários sobre a pesquisa.
+    Relatório comparativo em Markdown contendo seções específicas para cada uma das {ferramentas_alvo}.
   agent: researcher
 
 audit_task:
@@ -27,22 +25,34 @@ audit_task:
 
 write_task:
   description: >
-    Escreva um artigo técnico profundo comparando {ferramentas_alvo}.
-    Integre os dados arquiteturais (FSSD, topologias, replicação) levantados pela pesquisa.
-    Siga esta formatação visual:
-    1. Título e Subtítulo concisos no topo.
-    2. Introdução em primeira pessoa focada no problema técnico de engenharia causado por {contexto} em {ferramenta_legada}.
-    3. Desenvolvimento técnico rigoroso. Não simplifique. Use parágrafos curtos (máximo 4 linhas), subtítulos H2/H3 e tabelas comparativas.
-    4. Analise o impacto real no Dia 2 (rebalanceamento, vendor lock-in, consumo de RAM).
-    5. Conclusão baseada em trade-offs de engenharia.
-  expected_output: Artigo em Markdown com densidade técnica de engenharia, mas formatado visualmente para o Medium.
+    Crie o artigo técnico definitivo comparando {ferramentas_alvo}. 
+    Use os dados de arquitetura (FSSD, Master-Worker, DHT) e licenças levantados.
+    
+    REQUISITOS DE ESTILO E CONTEÚDO:
+    1. Conexão e Empatia (Storytelling): Inicie em primeira pessoa. Relate as "raivas" e dores reais enfrentadas com {ferramenta_legada} devido a {contexto}. Crie uma linha cronológica rápida de como o problema surgiu para gerar conexão com o leitor.
+    2. Alinhamento: Deixe claro logo no início qual é o público-alvo e o que será abordado tecnicamente, evitando frustrações.
+    3. Desenvolvimento Explicativo: Escreva como se estivesse explicando as ferramentas para um colega SRE sentado à sua frente. Use suas próprias palavras e opiniões para explicar a arquitetura pesada.
+    4. Analise o impacto real no Dia 2 (rebalanceamento, vendor lock-in, RAM) usando tabelas para comparações diretas.
+    5. Personalidade: Não tente ser neutro. O diferencial do artigo é a sua visão técnica sobre as soluções.
+  expected_output: >
+    Artigo em Markdown altamente engajador e formatado para o Medium.
+    ESTRUTURA OBRIGATÓRIA:
+    - Título / Subtítulo (Concisos)
+    - Introdução: A História e a Dor (Storytelling sobre o legado)
+    - O Que Vamos Abordar (Alinhamento de expectativa)
+    - Deep Dive Arquitetural (Explicação técnica com toque pessoal)
+    - Operação de Dia 2: Trade-offs (Uso de tabelas)
+    - Conclusão e CTA (Sua recomendação fundamentada e convite para comentários)
   agent: writer
 
 validation_task:
   description: >
-    Leia o artigo gerado pelo escritor.
-    1. Compare as informações com a pesquisa. Verifique modelos de licença e arquitetura.
-    2. Se encontrar erros, use a ferramenta de delegação (Delegate work to co-worker) para enviar o texto de volta ao 'Engenheiro de Dados Sênior' (writer). Especifique claramente qual trecho está incorreto e solicite a correção.
-    3. Avalie a nova versão enviada por ele. Se estiver correta, aprove.
-  expected_output: O artigo final em Markdown, formatado para o Medium e validado tecnicamente após as correções do escritor.
+    Faça a revisão final do artigo gerado. 
+    Sua única missão é garantir a verdade técnica sem destruir o estilo do autor:
+    1. Se o escritor errou uma licença ou conceito de arquitetura, corrija o fato diretamente no corpo do artigo.
+    2. REGRA DE PRESERVAÇÃO: Mantenha intactos o storytelling, a escrita em primeira pessoa, as opiniões e a empatia. Não remova a personalidade do texto.
+    3. Remova apenas informações técnicas falsas, alucinações ou invenções operacionais.
+    4. Consolide o texto em um arquivo único, sem repetições.
+  expected_output: >
+    Artigo final em Markdown, tecnicamente impecável, preservando o tom de voz do autor, sem notas de rodapé ou comentários de auditoria.
   agent: fact_checker

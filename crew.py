@@ -2,8 +2,9 @@ from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from custom_tools import search_tool
 
-llm_lite = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.1)
-llm_validator = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.2)
+# Modelos otimizados para 12GB VRAM
+llm_lite = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.0)
+llm_validator = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.0)
 llm_writer = LLM(model='ollama/glm-4.7-flash', base_url='http://localhost:11434', temperature=0.2)
 
 @CrewBase
@@ -18,7 +19,6 @@ class TechAnalysisCrew():
             config=self.agents_config['researcher'],
             tools=[search_tool],
             llm=llm_lite,
-            max_iter=5,
             allow_delegation=False,
             verbose=True
         )
@@ -46,7 +46,7 @@ class TechAnalysisCrew():
         return Agent(
             config=self.agents_config['fact_checker'],
             llm=llm_validator,
-            allow_delegation=True,
+            allow_delegation=False,
             verbose=True
         )
 
