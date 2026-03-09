@@ -1,0 +1,15 @@
+[project]
+name = "crewai-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "crewai-tools[serpapi]>=1.9.3",
+    "crewai[google-genai,litellm]>=1.9.3",
+    "ipykernel>=7.2.0",
+    "langchain-community>=0.4.1",
+    "langsmith>=0.7.14",
+    "litellm>=1.75.3",
+    "load-dotenv>=0.1.0",
+]

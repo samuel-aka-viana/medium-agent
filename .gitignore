@@ -1,0 +1,7 @@
+.env
+.venv
+.idea
+uv.lock
+*.txt
+guia_implementacao_pratico.md
+*.ipynb

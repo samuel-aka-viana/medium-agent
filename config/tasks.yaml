@@ -1,0 +1,48 @@
+research_task:
+  description: >
+    Pesquise profundamente sobre {ferramentas_alvo} usando a ferramenta de busca.
+    1. Detalhe o impacto do contexto atual ({contexto}) na adoção corporativa.
+    2. Compare a arquitetura das soluções em {ferramentas_alvo}.
+    3. Avalie o atendimento a requisitos técnicos como {requisito_tecnico}.
+    
+    REGRA CRÍTICA DE EXECUÇÃO: 
+    - Proibido qualquer texto de introdução, saudação ou conclusão. 
+    - Ignore frases como "Aqui está o que encontrei", "It looks like" ou "Como posso ajudar". 
+    - Seu output DEVE começar obrigatoriamente com o título "## Relatório de Pesquisa Técnica".
+    - Trate o retorno da ferramenta de busca como dados brutos para extração, não como uma conversa.
+    - Vá direto para os fatos, métricas e links.
+  expected_output: >
+    Um relatório técnico puramente em Markdown (H2 e Bullet Points). 
+    Iniciado obrigatoriamente por "## Relatório de Pesquisa Técnica".
+    Sem metalinguagem ou comentários sobre a pesquisa.
+  agent: researcher
+
+audit_task:
+  description: >
+    Com base na pesquisa, analise como {ferramentas_alvo} se comportam em um ambiente de produção.
+    Avalie o risco de vendor lock-in e os trade-offs de performance para workloads padrão.
+    Identifique qual ferramenta exige menos esforço operacional para substituir a solução legada ({ferramenta_legada}).
+  expected_output: Análise de trade-offs operacionais e adequação ao ecossistema corporativo.
+  agent: sre_auditor
+
+write_task:
+  description: >
+    Escreva um artigo técnico profundo comparando {ferramentas_alvo}.
+    Integre os dados arquiteturais (FSSD, topologias, replicação) levantados pela pesquisa.
+    Siga esta formatação visual:
+    1. Título e Subtítulo concisos no topo.
+    2. Introdução em primeira pessoa focada no problema técnico de engenharia causado por {contexto} em {ferramenta_legada}.
+    3. Desenvolvimento técnico rigoroso. Não simplifique. Use parágrafos curtos (máximo 4 linhas), subtítulos H2/H3 e tabelas comparativas.
+    4. Analise o impacto real no Dia 2 (rebalanceamento, vendor lock-in, consumo de RAM).
+    5. Conclusão baseada em trade-offs de engenharia.
+  expected_output: Artigo em Markdown com densidade técnica de engenharia, mas formatado visualmente para o Medium.
+  agent: writer
+
+validation_task:
+  description: >
+    Leia o artigo gerado pelo escritor.
+    1. Compare as informações com a pesquisa. Verifique modelos de licença e arquitetura.
+    2. Se encontrar erros, use a ferramenta de delegação (Delegate work to co-worker) para enviar o texto de volta ao 'Engenheiro de Dados Sênior' (writer). Especifique claramente qual trecho está incorreto e solicite a correção.
+    3. Avalie a nova versão enviada por ele. Se estiver correta, aprove.
+  expected_output: O artigo final em Markdown, formatado para o Medium e validado tecnicamente após as correções do escritor.
+  agent: fact_checker
