@@ -46,7 +46,7 @@ O script utiliza dois modelos distintos para otimizar velocidade e capacidade de
 Para o agente de pesquisa e auditoria de infraestrutura:
 
 ```bash
-ollama pull qwen3.5
+ollama pull gemma3
 
 ```
 
