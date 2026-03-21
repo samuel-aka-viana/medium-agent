@@ -11,16 +11,18 @@ ARQUIVO_REFERENCIAS = 'referencias_pesquisa.txt'
 
 def run():
     inputs = {
-        'ferramentas_alvo': 'SeaweedFS e VersityGW',
-        'ferramenta_legada': 'MinIO',
-        'contexto': 'mudança de licença para AGPLv3 limitando uso comercial corporativo livre em 2025',
-        'requisito_tecnico': 'paridade total com a API S3 da AWS e performance de IOPS para arquivos pequenos'
+        'ferramentas_alvo': 'DBT e DATAFORM',
+        'contexto': 'Desenvolvimento de governança e lineage',
+        'requisito_tecnico': 'Comparação de ferramentas e seus trade-offs, exigindo dados e features relevantes',
     }
 
     print(f"\nIniciando pipeline para: {inputs['ferramentas_alvo']}...")
     try:
         if os.path.exists(ARQUIVO_REFERENCIAS):
             os.remove(ARQUIVO_REFERENCIAS)
+
+        if os.path.exists(ARQUIVO_SAIDA):
+            os.remove(ARQUIVO_SAIDA)
 
         crew_instance = TechAnalysisCrew().crew()
         result = crew_instance.kickoff(inputs=inputs)

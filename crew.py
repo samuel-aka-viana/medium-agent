@@ -2,10 +2,12 @@ from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from custom_tools import search_tool
 
-# Modelos otimizados para 12GB VRAM
+llm_researcher = LLM(model='ollama/qwen3.5', base_url='http://localhost:11434', temperature=0.0)
+
 llm_lite = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.0)
-llm_validator = LLM(model='ollama/gemma3', base_url='http://localhost:11434', temperature=0.0)
+
 llm_writer = LLM(model='ollama/glm-4.7-flash', base_url='http://localhost:11434', temperature=0.2)
+
 
 @CrewBase
 class TechAnalysisCrew():
@@ -18,8 +20,10 @@ class TechAnalysisCrew():
         return Agent(
             config=self.agents_config['researcher'],
             tools=[search_tool],
-            llm=llm_lite,
+            llm=llm_researcher,     # qwen3.5 — tool use consistente
             allow_delegation=False,
+            max_iter=8,             # evita loop sem cortar pesquisa cedo
+            max_retry_limit=2,      # máximo de reformulações antes de desistir
             verbose=True
         )
 
@@ -27,7 +31,7 @@ class TechAnalysisCrew():
     def sre_auditor(self) -> Agent:
         return Agent(
             config=self.agents_config['sre_auditor'],
-            llm=llm_lite,
+            llm=llm_lite,           # sem tool — gemma3 aguenta
             allow_delegation=False,
             verbose=True
         )
@@ -45,7 +49,7 @@ class TechAnalysisCrew():
     def fact_checker(self) -> Agent:
         return Agent(
             config=self.agents_config['fact_checker'],
-            llm=llm_validator,
+            llm=llm_writer,         # mesmo modelo do writer — contexto consistente
             allow_delegation=False,
             verbose=True
         )

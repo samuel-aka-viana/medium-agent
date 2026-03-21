@@ -2,57 +2,107 @@ research_task:
   description: >
     Você recebeu uma lista de tecnologias: {ferramentas_alvo}.
     Sua missão é realizar uma varredura técnica completa para CADA uma delas.
-    
+
     PROTOCOLO DE EXECUÇÃO:
     1. Identifique individualmente cada tecnologia em {ferramentas_alvo}.
     2. Execute ao menos uma busca específica para cada tecnologia separadamente.
-    3. Para cada ferramenta, extraia: Licença, Arquitetura base, e paridade S3.
-    4. Se os resultados de uma busca focarem apenas em uma ferramenta, você DEVE realizar uma nova busca focada na ferramenta restante.
-    
+    3. Para cada ferramenta, extraia os dados relevantes ao seguinte requisito: {requisito_tecnico}.
+    4. Se os resultados de uma busca focarem apenas em uma ferramenta, você DEVE realizar
+       uma nova busca focada na ferramenta restante.
+    5. Priorize fontes com data recente. Descarte conteúdo anterior a 2025.
+
     REGRA CRÍTICA: Não encerre a tarefa até ter dados factuais sobre todos os itens de {ferramentas_alvo}.
     Proibido saudações. Comece com "## Relatório de Pesquisa Técnica".
   expected_output: >
-    Relatório comparativo em Markdown contendo seções específicas para cada uma das {ferramentas_alvo}.
+    Relatório em Markdown com uma seção por ferramenta de {ferramentas_alvo} contendo:
+    arquitetura, limitações e dados relevantes a {requisito_tecnico},
+    com fontes datadas e rastreáveis.
   agent: researcher
 
 audit_task:
   description: >
     Com base na pesquisa, analise como {ferramentas_alvo} se comportam em um ambiente de produção.
-    Avalie o risco de vendor lock-in e os trade-offs de performance para workloads padrão.
-    Identifique qual ferramenta exige menos esforço operacional para substituir a solução legada ({ferramenta_legada}).
-  expected_output: Análise de trade-offs operacionais e adequação ao ecossistema corporativo.
+    Contexto da análise: {contexto}.
+    Avalie o risco de vendor lock-in e os trade-offs relevantes para: {requisito_tecnico}.
+    Identifique qual ferramenta exige menos esforço operacional dado o cenário descrito no contexto.
+  expected_output: >
+    Documento em Markdown com estrutura obrigatória:
+    - Uma seção por ferramenta de {ferramentas_alvo} com trade-offs e pontos de falha
+    - Uma seção de comparação direta entre as ferramentas
+    - Uma seção de recomendação técnica justificada para o contexto: {contexto}
   agent: sre_auditor
 
 write_task:
   description: >
-    Crie o artigo técnico definitivo comparando {ferramentas_alvo}. 
-    Use os dados de arquitetura (FSSD, Master-Worker, DHT) e licenças levantados.
-    
-    REQUISITOS DE ESTILO E CONTEÚDO:
-    1. Conexão e Empatia (Storytelling): Inicie em primeira pessoa. Relate as "raivas" e dores reais enfrentadas com {ferramenta_legada} devido a {contexto}. Crie uma linha cronológica rápida de como o problema surgiu para gerar conexão com o leitor.
-    2. Alinhamento: Deixe claro logo no início qual é o público-alvo e o que será abordado tecnicamente, evitando frustrações.
-    3. Desenvolvimento Explicativo: Escreva como se estivesse explicando as ferramentas para um colega SRE sentado à sua frente. Use suas próprias palavras e opiniões para explicar a arquitetura pesada.
-    4. Analise o impacto real no Dia 2 (rebalanceamento, vendor lock-in, RAM) usando tabelas para comparações diretas.
-    5. Personalidade: Não tente ser neutro. O diferencial do artigo é a sua visão técnica sobre as soluções.
+    Crie o artigo técnico definitivo comparando {ferramentas_alvo}.
+    Use os dados técnicos e arquiteturais levantados na pesquisa sobre cada ferramenta.
+    O artigo deve ter entre 1200 e 2000 palavras.
+
+    TÍTULO:
+    Gere 3 opções de título com ângulo de tensão ou contradição — evite títulos neutros
+    como "X vs Y". Prefira ângulos como "Por que abandonei X" ou "O que ninguém fala sobre Y".
+    Escolha o mais forte e use como título principal.
+
+    VOZ E STORYTELLING:
+    Construa a narrativa em primeira pessoa como engenheiro de dados que testa ferramentas
+    na prática — não como gestor que toma decisões estratégicas.
+    Sem frases como "a escolha certa é", "para empresas que buscam" ou "Tech Leads devem".
+    A narrativa parte dos trade-offs e falhas identificados na auditoria. Nunca invente experiências.
+    Crie uma linha cronológica concreta de como o problema surgiu — use os dados
+    da auditoria como base. Sem metáforas genéricas.
+
+    FORMATAÇÃO MEDIUM:
+    - Use H2 para seções principais, H3 para subseções. Nunca H1 no corpo.
+    - Parágrafos curtos — máximo 3 linhas cada.
+    - Use citação em bloco (>) para destacar opiniões fortes e conclusões.
+    - Tabelas simples com no máximo 3 colunas — Medium não renderiza tabelas complexas.
+    - Sem HTML inline.
+
+    TÉCNICA:
+    Explique a arquitetura de cada ferramenta com suas palavras.
+    Cite comportamentos específicos da pesquisa. Sem dado, sem afirmação.
+
+    CTA:
+    Finalize com uma pergunta técnica específica ao nicho de {ferramentas_alvo}
+    que incentive engenheiros a responderem com sua própria experiência.
+    Não use "deixe seu comentário" — seja específico sobre o que você quer saber.
+
+    PERSONALIDADE: Não tente ser neutro. Tome partido com dados.
   expected_output: >
-    Artigo em Markdown altamente engajador e formatado para o Medium.
-    ESTRUTURA OBRIGATÓRIA:
-    - Título / Subtítulo (Concisos)
-    - Introdução: A História e a Dor (Storytelling sobre o legado)
-    - O Que Vamos Abordar (Alinhamento de expectativa)
-    - Deep Dive Arquitetural (Explicação técnica com toque pessoal)
-    - Operação de Dia 2: Trade-offs (Uso de tabelas)
-    - Conclusão e CTA (Sua recomendação fundamentada e convite para comentários)
+    Artigo em Markdown entre 1200 e 2000 palavras, formatado para publicação direta no Medium:
+    - Título com ângulo de tensão ou contradição
+    - Subtítulo conciso
+    - Introdução com storytelling ancorado nos dados da auditoria
+    - Seção de escopo e público-alvo
+    - Deep Dive Arquitetural por ferramenta com H2/H3 e parágrafos curtos
+    - Tabela de Trade-offs do Dia 2 com no máximo 3 colunas
+    - Conclusão com recomendação em bloco de citação e CTA com pergunta técnica específica
   agent: writer
 
 validation_task:
   description: >
-    Faça a revisão final do artigo gerado. 
-    Sua única missão é garantir a verdade técnica sem destruir o estilo do autor:
-    1. Se o escritor errou uma licença ou conceito de arquitetura, corrija o fato diretamente no corpo do artigo.
-    2. REGRA DE PRESERVAÇÃO: Mantenha intactos o storytelling, a escrita em primeira pessoa, as opiniões e a empatia. Não remova a personalidade do texto.
-    3. Remova apenas informações técnicas falsas, alucinações ou invenções operacionais.
-    4. Consolide o texto em um arquivo único, sem repetições.
+    Faça a revisão final do artigo gerado sobre {ferramentas_alvo}.
+
+    CHECKLIST DE SEÇÕES — verifique se todas existem antes de qualquer correção:
+    - Título com ângulo de tensão
+    - Subtítulo
+    - Introdução com storytelling
+    - Seção de escopo e público
+    - Deep Dive Arquitetural com seção por ferramenta
+    - Tabela de Trade-offs com no máximo 3 colunas
+    - Conclusão em bloco de citação
+    - CTA com pergunta técnica específica
+    Se alguma seção estiver ausente, adicione uma nota: "seção ausente: [nome]".
+
+    CORREÇÃO TÉCNICA:
+    1. Se o escritor errou um conceito técnico relacionado a {ferramentas_alvo}, corrija diretamente.
+    2. Remova apenas informações técnicas falsas, alucinações ou invenções operacionais.
+
+    REGRA DE PRESERVAÇÃO:
+    Mantenha intactos o storytelling, a escrita em primeira pessoa, as opiniões e a empatia.
+    Não remova a personalidade do texto. Consolide em arquivo único sem repetições.
   expected_output: >
-    Artigo final em Markdown, tecnicamente impecável, preservando o tom de voz do autor, sem notas de rodapé ou comentários de auditoria.
+    Artigo final em Markdown entre 1200 e 2000 palavras, com checklist de seções verificado,
+    fatos técnicos corrigidos, formatação Medium preservada e voz do autor intacta.
+    Sem notas de rodapé ou comentários de auditoria visíveis.
   agent: fact_checker
