@@ -20,10 +20,10 @@ class TechAnalysisCrew():
         return Agent(
             config=self.agents_config['researcher'],
             tools=[search_tool],
-            llm=llm_researcher,     # qwen3.5 — tool use consistente
+            llm=llm_researcher,
             allow_delegation=False,
-            max_iter=8,             # evita loop sem cortar pesquisa cedo
-            max_retry_limit=2,      # máximo de reformulações antes de desistir
+            max_iter=8,
+            max_retry_limit=2,
             verbose=True
         )
 
@@ -31,7 +31,7 @@ class TechAnalysisCrew():
     def sre_auditor(self) -> Agent:
         return Agent(
             config=self.agents_config['sre_auditor'],
-            llm=llm_lite,           # sem tool — gemma3 aguenta
+            llm=llm_lite,
             allow_delegation=False,
             verbose=True
         )
@@ -49,7 +49,7 @@ class TechAnalysisCrew():
     def fact_checker(self) -> Agent:
         return Agent(
             config=self.agents_config['fact_checker'],
-            llm=llm_writer,         # mesmo modelo do writer — contexto consistente
+            llm=llm_writer,
             allow_delegation=False,
             verbose=True
         )
