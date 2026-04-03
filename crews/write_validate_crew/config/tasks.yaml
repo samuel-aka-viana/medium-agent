@@ -1,0 +1,54 @@
+draft_task:
+  description: >
+    Crie o corpo do texto do artigo comparando {ferramentas_alvo}.
+    Use os dados técnicos e arquiteturais levantados na auditoria anterior:
+    {dados_auditoria}
+
+    VOZ E STORYTELLING:
+    Escreva como um estudo técnico pessoal para a sua própria infraestrutura.
+    Você colocou as ferramentas à prova em produção e deixou que elas se medissem sozinhas.
+    Tome partido. Escolha um lado baseado nos dados, mas seja humilde e livre de prepotência.
+    Vá direto ao ponto. Sem metáforas genéricas.
+
+    REGRAS DE GROUNDING (CRÍTICO):
+    - PROIBIDO inventar métricas, benchmarks ou valores que não estejam explicitamente no JSON de auditoria.
+    - Se a auditoria informar que um dado não foi encontrado, NÃO INVENTE NÚMEROS. Use o formato exato: [PREENCHER MANUALMENTE: Inserir dado sobre X].
+    - Se a auditoria for puramente qualitativa, foque nos mecanismos de engenharia.
+  expected_output: >
+    Um rascunho denso e narrativo do artigo técnico, ancorado apenas nos dados fornecidos ou marcados com placeholders onde faltarem informações numéricas.
+  agent: writer
+
+formatting_task:
+  description: >
+    Pegue o rascunho gerado e formate-o estritamente para publicação no Medium.
+    
+    TÍTULO: Gere 3 opções de título diretas e coloque-os no topo.
+    
+    FORMATAÇÃO MEDIUM:
+    - Use H2 para secções principais e H3 para subsecções. Nunca use H1 no corpo do texto.
+    - Quebre o texto em parágrafos curtos.
+    - Use citação em bloco (>) para destacar sua decisão técnica final.
+    - Crie tabelas simples com no máximo 3 colunas. Sem HTML inline.
+
+    REGRA DE LIMPEZA:
+    - Remova obrigatoriamente qualquer tag <think> ou blocos de raciocínio interno do modelo.
+    - O output final deve ser apenas o Markdown limpo.
+
+    CTA: Adicione um subtítulo final perguntando aos leitores sobre experiências semelhantes com {ferramentas_alvo}.
+  expected_output: >
+    O artigo técnico perfeitamente formatado em Markdown para o Medium, pronto para revisão.
+  agent: writer
+
+validation_task:
+  description: >
+    Faça a revisão técnica e estrutural do artigo formatado sobre {ferramentas_alvo}.
+
+    NOVO PROTOCOLO DE QUALIDADE:
+    A regra de aborto por "dados insuficientes" está suspensa para permitir a geração com placeholders.
+    Sua missão é apenas garantir a VERACIDADE:
+    1. Se houver números de performance ou custo no artigo que NÃO estejam presentes na auditoria, apague-os e coloque [PREENCHER MANUALMENTE].
+    2. Garanta que o checklist de formatação (H2/H3, tabelas, CTA) foi cumprido.
+    3. Preserve o storytelling em primeira pessoa e o tom de estudo pessoal.
+  expected_output: >
+    O artigo final em Markdown, validado contra alucinações e formatado corretamente.
+  agent: fact_checker
